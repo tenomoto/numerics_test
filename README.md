@@ -34,8 +34,8 @@ pgfortran -mp -Minfo -fast -o svd_mkl svd.f90 -L"$MKLPATH" mkl_intel_lp64.lib mk
 
 ### プロジェクトの作成
 
-プロジェクトを作成し，必要なパッケージを追加します。
-パッケージは`%USERPROFILE%\.nuget\packages`にインストールされます。
+プロジェクトを作成し，必要なパッケージを追加する。
+パッケージは`%USERPROFILE%\.nuget\packages`にインストールされる。
 
 ```
 > dotnet new console -lang F# -o fsharp
