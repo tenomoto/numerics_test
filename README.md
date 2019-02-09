@@ -9,7 +9,7 @@
 
 ## Python
 
-* Official Python 3.7.1 + pipでインストールしたnumpy
+* Official Python 3.7.1 + pipでインストールしたnumpy。`numpy.show_config()`によるとOpenBLASとリンクされている。
 * MKLはcondaに作ったIntel Pythonの仮想環境。Python 3.6.5, Numpy 1.15.4, MKL 2019.2
 * Pythonのみtimeitモジュールで計測
 
