@@ -1,26 +1,27 @@
-# PowerShellで行列計算
+# Matrix Computation with PowerShell
 
-[PowerShell for MathNet.Numerics](https://cyber-defense.sans.org/blog/2015/06/27/powershell-for-math-net-numerics/)でPowerShellから.NET用の数値計算ライブラリを呼び出せることを知り，Python, Fortran, F#と比較してみることにした。
+[PowerShell for MathNet.Numerics](https://cyber-defense.sans.org/blog/2015/06/27/powershell-for-math-net-numerics/) motivated me to test the performance of matrix computation of MathNet Numerics with PowerShell and F# against Numpy and Fortran.
+
+[日本語](https://qiita.com/tenomoto/items/ee47c3b0361f5945a1ef)
  
-## マシン
+## Machine
 
-* Intel Core i5-6500 @ 3.2 GHz 16GB RAM（自作）
+* Intel Core i5-6500 @ 3.2 GHz 16GB RAM (self-built)
 * Windows 10 1803
 
 ## Python
 
-* Official Python 3.7.1 + pipでインストールしたnumpy。`numpy.show_config()`によるとOpenBLASとリンクされている。
-* MKLはcondaに作ったIntel Pythonの仮想環境。Python 3.6.5, Numpy 1.15.4, MKL 2019.2
-* Pythonのみtimeitモジュールで計測
-
-* [インテル® Distribution for Python* と Anaconda* を使用する](https://www.isus.jp/products/python-distribution/using-intel-distribution-for-python-with-anaconda/)
+* Official Python 3.7.1 at [Python.org](https://www.python.org) with [Numpy](https://www.numpy.org/) 1.16.1 installed with [pip](https://pip.pypa.io/en/stable/). `numpy.show_config()` shows that numpy is linked against OpenBLAS.
+* Intel Python 3.6.5 with Numpy 1.15.4 and MKL 2019.2 installed as a Conda virtual environment.
+* [Installing Intel® Distribution for Python* and Intel® Performance Libraries with Anaconda*](https://software.intel.com/en-us/articles/using-intel-distribution-for-python-with-anaconda)
+* Measured with timeit module
 
 ## Fortran
 
 * PGI Community Editon 1810
 * [Intel Math Kernel Library 2019](https://software.intel.com/en-us/mkl) update 2
 
-MKLはネットワークインストーラを使用。インストール時に64ビット版のみ，pgiサポートありにカスタマイズ。
+Installed MKL with the network installer. Choose to omit 32-bit libraries and to support the PGI compiler. Compile commands for the binaries with PGI BLAS/LAPACK and with MKL are as follows.
 
 ```
 pgfortran -mp -Minfo -fast svd -lblas -llapack -o svd
@@ -29,13 +30,13 @@ pgfortran -mp -Minfo -fast -o svd_mkl svd.f90 -L"$MKLPATH" mkl_intel_lp64.lib mk
 
 ## F#
 
-* Visual Studio 2017でインストール。
+* Installed with Visual Studio 2017.
 * .NET Core 2.2 Windows
 
-### プロジェクトの作成
+### Create a project
 
-プロジェクトを作成し，必要なパッケージを追加する。
-パッケージは`%USERPROFILE%\.nuget\packages`にインストールされる。
+Create a new project and add necessary packages.
+Packages are installed in `%USERPROFILE%\.nuget\packages`.
 
 ```
 > dotnet new console -lang F# -o fsharp
@@ -44,15 +45,16 @@ pgfortran -mp -Minfo -fast -o svd_mkl svd.f90 -L"$MKLPATH" mkl_intel_lp64.lib mk
 > dotnet add package MathNet.Numerics.MKL.Win-x64
 ```
 
-### コンパイル
+### Compile
 
-`dotnet run`では遅かったので，`publish`で`exe`を作成。
+Running the project with `dotnet run` result in suboptimal performance.
+The standalne binary (`exe`) created with `publish` is used.
 
 ```
 > dotnet publish -c Release -r win-x64
 ```
 
-### 結果
+### Results
 |                | mutmul |  eig  |  svd  |  inv  | det |
 |:---------------|-------:|------:|------:|------:|-----|
 | PowerShell     |   3369 | 15602 | 11685 | 10723 | 627 |
