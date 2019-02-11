@@ -1,0 +1,4 @@
+source https://nuget.org/api/v2
+
+nuget MathNet.Numerics >= 4.7.0
+nuget MathNet.Numerics.MKL.Win-x64 >= 2.3.0
